@@ -14,19 +14,19 @@ func TestBer2Der(t *testing.T) {
 	// indefinite length fixture
 	ber := []byte{0x30, 0x80, 0x02, 0x01, 0x01, 0x00, 0x00}
 	expected := []byte{0x30, 0x03, 0x02, 0x01, 0x01}
-	der, err := ber2der(ber)
+	der, err := Ber2der(ber)
 	if err != nil {
-		t.Fatalf("ber2der failed with error: %v", err)
+		t.Fatalf("Ber2der failed with error: %v", err)
 	}
 	if !bytes.Equal(der, expected) {
-		t.Errorf("ber2der result did not match.\n\tExpected: % X\n\tActual: % X", expected, der)
+		t.Errorf("Ber2der result did not match.\n\tExpected: % X\n\tActual: % X", expected, der)
 	}
 
-	if der2, err := ber2der(der); err != nil {
-		t.Errorf("ber2der on DER bytes failed with error: %v", err)
+	if der2, err := Ber2der(der); err != nil {
+		t.Errorf("Ber2der on DER bytes failed with error: %v", err)
 	} else {
 		if !bytes.Equal(der, der2) {
-			t.Error("ber2der is not idempotent")
+			t.Error("Ber2der is not idempotent")
 		}
 	}
 	var thing struct {
@@ -56,7 +56,7 @@ func TestBer2Der_Negatives(t *testing.T) {
 	}
 
 	for _, fixture := range fixtures {
-		_, err := ber2der(fixture.Input)
+		_, err := Ber2der(fixture.Input)
 		if err == nil {
 			t.Errorf("No error thrown. Expected: %s", fixture.ErrorContains)
 		}
@@ -72,19 +72,19 @@ func TestBer2Der_NestedMultipleIndefinite(t *testing.T) {
 	ber := []byte{0x30, 0x80, 0x30, 0x80, 0x02, 0x01, 0x01, 0x00, 0x00, 0x30, 0x80, 0x02, 0x01, 0x02, 0x00, 0x00, 0x00, 0x00}
 	expected := []byte{0x30, 0x0A, 0x30, 0x03, 0x02, 0x01, 0x01, 0x30, 0x03, 0x02, 0x01, 0x02}
 
-	der, err := ber2der(ber)
+	der, err := Ber2der(ber)
 	if err != nil {
-		t.Fatalf("ber2der failed with error: %v", err)
+		t.Fatalf("Ber2der failed with error: %v", err)
 	}
 	if bytes.Compare(der, expected) != 0 {
-		t.Errorf("ber2der result did not match.\n\tExpected: % X\n\tActual: % X", expected, der)
+		t.Errorf("Ber2der result did not match.\n\tExpected: % X\n\tActual: % X", expected, der)
 	}
 
-	if der2, err := ber2der(der); err != nil {
-		t.Errorf("ber2der on DER bytes failed with error: %v", err)
+	if der2, err := Ber2der(der); err != nil {
+		t.Errorf("Ber2der on DER bytes failed with error: %v", err)
 	} else {
 		if !bytes.Equal(der, der2) {
-			t.Error("ber2der is not idempotent")
+			t.Error("Ber2der is not idempotent")
 		}
 	}
 	var thing struct {
@@ -107,7 +107,7 @@ func TestVerifyIndefiniteLengthBer(t *testing.T) {
 	t.Parallel()
 	decoded := mustDecodePEM([]byte(testPKCS7))
 
-	_, err := ber2der(decoded)
+	_, err := Ber2der(decoded)
 	if err != nil {
 		t.Errorf("cannot parse indefinite length ber: %v", err)
 	}

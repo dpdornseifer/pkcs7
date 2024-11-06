@@ -157,7 +157,7 @@ func Parse(data []byte) (p7 *PKCS7, err error) {
 		return nil, errors.New("pkcs7: input data is empty")
 	}
 	var info contentInfo
-	der, err := ber2der(data)
+	der, err := Ber2der(data)
 	if err != nil {
 		return nil, err
 	}
